@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Request Animation Frame 2 canvas</title>
+	<style>
+ 		body{ background-color:white; }
+ 		#canvas{border:1px solid red; }
+	</style>
+
+</head>
+<body>
+
+	<canvas id="canvas" width=512 height=256></canvas>
+	<script>
+	window.onload=(function(){
+		// canvas related variables
+		var canvas=document.getElementById("canvas");
+		var ctx=canvas.getContext("2d");
+		var cw=canvas.width;
+		var ch=canvas.height;
+		var cubow=cw*0.1;
+		var cuboh=ch*0.1;
+		// animation interval variables
+		var nextTime=0; // the next animation begins at "nextTime"
+		var duration=100; // run animation every 1000ms
+		var x=0; // the X where the next rect is drawn
+		var y=0;
+		// start the animation
+		requestAnimationFrame(animate);
+
+		function animate(currentTime){
+			// wait for nextTime to occur
+			//console.log(currentTime);
+			if(currentTime<nextTime){
+				// request another loop of animation
+				requestAnimationFrame(animate);
+				// time hasn't elapsed so just return
+				return;
+			}
+			// set nextTime
+			nextTime=currentTime+duration;
+			// add another rectangle every 1000ms
+			ctx.fillStyle='#'+Math.floor(Math.random()*16777215).toString(16);
+			//console.log(Math.floor(Math.random()*16777215).toString(16));
+
+			ctx.fillRect(x,y,cubow,cuboh);
+			//console.log('x: '+x+' cubow: '+cubow+' y: '+y+' cuboh: '+cuboh);
+			if(x>=cw){ // update X position for next rectangle
+
+				x=0;
+				(y>=ch)? y=0:y+=cuboh;// update Y position for next rectangle
+			}else{
+				x+=cubow;
+			}
+			
+			
+			// request another loop of animation
+			requestAnimationFrame(animate);
+		}
+	}); // end $(function(){});
+</script>
+</body>
+</html>

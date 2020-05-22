@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Request Animation Frame canvas</title>
+	<style>
+	</style>
+
+</head>
+<body>
+
+	<canvas id="canvas" width=500 height=300 style="background-color:#808080;"></canvas>
+	<script>
+
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	
+	const textToDisplay = "This is an example that uses the canvas to animate some text.";
+	const textStyle = "white";
+	const BGStyle = "black"; // background style
+	const textSpeed = 0.3; // in pixels per millisecond
+	const textHorMargin = 8; // have the text a little outside the canvas
+	ctx.font = Math.floor(canvas.height * 0.8) + "px arial"; // size the font to 80% of canvas height
+	var textWidth = ctx.measureText(textToDisplay).width; // get the text width
+	var totalTextSize = (canvas.width + textHorMargin * 2 + textWidth);
+	ctx.textBaseline = "middle"; // not put the text in the vertical center
+	ctx.textAlign = "left"; // align to the left
+	var textX = canvas.width + 8; // start with the text off screen to the right
+	var textOffset = 0; // how far the text has moved
+	var startTime;
+
+	// this function is call once a frame which is approx 16.66 ms (60fps)
+	function update(time){ // time is passed by requestAnimationFrame
+		if(startTime === undefined){ // get a reference for the start time if this is the first frame
+			startTime = time;
+		}
+	
+		ctx.fillStyle = BGStyle;
+		ctx.fillRect(0, 0, canvas.width, canvas.height); // clear the canvas by drawing over it
+		textOffset = ((time - startTime) * textSpeed) % (totalTextSize); // move the text left
+		ctx.fillStyle = textStyle; // set the text style
+		ctx.fillText(textToDisplay, textX - textOffset, canvas.height / 2); // render the text
+		requestAnimationFrame(update);// all done request the next frame
+	}
+
+	requestAnimationFrame(update);// to start request the first frame
+
+	</script>
+</body>
+</html>

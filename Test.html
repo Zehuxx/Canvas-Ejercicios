@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test</title>
+	<style>
+	</style>
+
+</head>
+<body>
+
+<script>
+// canvas vars
+var canvas=document.createElement("canvas");
+document.body.appendChild(canvas);
+canvas.style.border='1px solid red';
+var ctx=canvas.getContext("2d");
+var cw=canvas.width;
+var ch=canvas.height;
+// canvas styles
+ctx.strokeStyle='skyblue';
+ctx.fillStyle='blue';
+// animating vars
+var pct=101;
+var startX=20;
+var startY=50;
+var endX=225;
+var endY=100;
+var dx=endX-startX;
+var dy=endY-startY;
+// start animation loop running
+requestAnimationFrame(animate);
+// listen for mouse events
+window.onmousedown=(function(e){handleMouseDown(e);});
+window.onmouseup=(function(e){handleMouseUp(e);});
+// constantly running loop
+// will animate dot from startX,startY to endX,endY
+function animate(time){
+	// demo: rerun animation
+	if(++pct>100){pct=0;}
+	// update
+	x=startX+dx*pct/100;
+	y=startY+dy*pct/100;
+	// draw
+	ctx.clearRect(0,0,cw,ch);
+	ctx.beginPath();
+	ctx.moveTo(startX,startY);
+	ctx.lineTo(endX,endY);
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.arc(x,y,5,0,Math.PI*2);
+	ctx.fill()
+	// request another animation loop
+	requestAnimationFrame(animate);
+}
+</script>
+</body>
+</html>

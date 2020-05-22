@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Movement Ilusion Canvas</title>
+	<style>
+	</style>
+
+</head>
+<body>
+
+<script>
+// create a canvas
+var canvas=document.createElement("canvas");
+var ctx=canvas.getContext("2d");
+ctx.fillStyle='red';
+document.body.appendChild(canvas);
+// a variable indicating a circle's X position
+var circleX=20;
+// start animating the circle across the canvas
+// by continuously erasing & redrawing the circle
+// in new positions
+requestAnimationFrame(animate);
+
+function animate(){
+	// update the X position of the circle
+	circleX++;
+	// redraw the circle in it's new position
+	ctx.clearRect(0,0,canvas.width,canvas.height);
+	ctx.beginPath();
+	ctx.arc( circleX, 30,15,0,Math.PI*2 );
+	ctx.fill();
+	// request another animate() loop
+	requestAnimationFrame(animate);
+}
+
+</script>
+</body>
+</html>

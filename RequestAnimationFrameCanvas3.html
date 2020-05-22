@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Request Animation Frame 3 canvas</title>
+	<style>
+ 		body{ background-color:white; }
+ 		#canvas{border:1px solid red; }
+	</style>
+
+</head>
+<body>
+
+	<canvas id="canvas" width=512 height=256></canvas>
+	<script>
+	window.onload=(function(){
+		// canvas related variables
+		var canvas=document.getElementById("canvas");
+		var ctx=canvas.getContext("2d");
+		var cw=canvas.width;
+		var ch=canvas.height;
+		// start the animation
+		requestAnimationFrame(animate);
+		
+		// draw a full randomly circle
+		function animate(currentTime){
+			var x=Math.random()*canvas.width;
+			var y=Math.random()*canvas.height;
+			var radius=10+Math.random()*15;
+			ctx.beginPath();
+			ctx.arc(x,y,radius,0,Math.PI*2);
+			ctx.fillStyle='#'+Math.floor(Math.random()*16777215).toString(16);
+			ctx.fill();
+			// request another loop of animation
+			requestAnimationFrame(animate);
+
+		}
+	}); // end $(function(){});
+</script>
+</body>
+</html>
