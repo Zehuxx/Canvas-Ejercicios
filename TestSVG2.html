@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test SVG 2</title>
+	<style>
+	</style>
+
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" width="100%"
+ xmlns:xlink="http://www.w3.org/1999/xlink" >
+<script><![CDATA[
+ xmlns = "http://www.w3.org/2000/svg";
+ xlink = "http://www.w3.org/1999/xlink";
+function add (evt) {
+ var C = evt.target;
+ var N = C.cloneNode(true);
+ var rx = C.getAttributeNS(null, "rx");
+ var ry = C.getAttributeNS(null, "ry");
+ var cy = C.getAttributeNS(null, "cy");
+// N.setAttributeNS(null, "cy", cy - 5);
+// above line doesn't work because this value
+// is overridden by animation
+ N.setAttributeNS(null, "rx", rx - 10);
+ N.setAttributeNS(null, "ry", ry - 5);
+ N.setAttributeNS(null, "transform", "translate(0," + (62 - ry) + ")");
+ document.documentElement.appendChild(N);
+}]]>
+</script>
+ <radialGradient id="r1" cx="50%" cy="90%" r="34%" fy="80%" spreadMethod="reflect"
+ gradientUnits="objectBoundingBox"> <stop offset=".1" stop-color="black" stop-opacity="0"/>
+ <stop offset=".8" stop-color="orange"/>
+ <stop offset=".9" stop-color="white" stop-opacity="0"/>
+ <stop offset="1" stop-color="grey"/>
+ </radialGradient>
+ <text font-size="23" font-family="serif" x="20" y="40" fill="black">Click the oval</text>
+ <ellipse ry="60" rx="110" fill="url(#r1)" stroke="black" onmousedown="add(evt)"
+ stroke-width="2" >
+ <animate attributeName="cx" type="translate" dur="9s" values="5%;90%;5%"
+ repeatCount="indefinite"/> <animate attributeName="cy" type="translate" dur="13s"
+ values="5%;90%;5%" repeatCount="indefinite"/>
+ </ellipse>
+</svg>
+</body>
+</html>

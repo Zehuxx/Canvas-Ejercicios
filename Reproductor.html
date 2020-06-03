@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reproductor</title>
+<style type="text/css">
+	#controls {
+		width: 80px;
+		float: left;
+	}
+
+	#bar {
+		height: 20px;
+		background-color: green;
+		width: 0;
+	}
+
+	#progress {
+   		margin-left: 80px;
+   		border: 1px solid black;
+   		cursor: pointer;
+	}
+</style>
+</head>
+<body>
+
+	<audio id="my-audio">
+		<source src="Recording.m4a">
+		<!-- place fallback here as <audio> supporting browsers will ignore it -->
+		<a href="audiofile.mp3">audiofile.mp3</a>
+	</audio>
+
+	<div id="controls">
+		<span id="loading">loading</span>
+		<button id="play" style="display:none">play</button>
+		<button id="pause" style="display:none" >pause</button>
+	</div>
+	<div id="progress">
+		<div id="bar"></div>
+	</div>
+
+	<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+ 	version="1.1"
+ 	width="500" height="500">
+
+ 	<g id="test">
+ 		<circle id="c1" r="100" cx="300" cy="200" fill="none" stroke="#e60" stroke-width="5"/> 
+ 		<text  font-family="Verdana" font-size="10pt" id="angulo">xxx</text>
+ 	</g>
+
+ 	
+
+	</svg>
+
+	<script type="text/javascript">
+
+	var xmlns = "http://www.w3.org/2000/svg";
+	var angle = Math.PI/2; //90°°°°
+	var pi = Math.PI;
+
+	function createCircle(circleProperties){
+		let C = document.createElementNS(xmlns, "circle");
+ 		C.setAttributeNS(null, "r", circleProperties.r);
+ 		C.setAttributeNS(null, "cx", circleProperties.cx);
+ 		C.setAttributeNS(null, "cy", circleProperties.cy);
+ 		C.setAttributeNS(null, "stroke-width", circleProperties.strokeWidth);
+ 		C.setAttributeNS(null, "stroke", circleProperties.stroke);
+ 		C.setAttributeNS(null, "id", circleProperties.id);
+ 		document.getElementById("test").appendChild(C);
+	}
+
+	function CirclePoint(r) {
+		if (angle <= 0) {
+			angle=pi*2;
+		}else {
+			angle-=(pi/(Math.random()*10));
+		}
+		console.log(Math.random());
+		//console.log((180/pi)*angle);
+
+		return {x: r * Math.cos(angle) + parseInt(c1_cx), y: r * Math.sin(angle) + parseInt(c1_cy)};
+	}
+
+	function addcircle() {
+		
+		var c2 = document.getElementById("c2");
+		if (c2 != undefined)
+			c2.remove();
+
+		let position = CirclePoint(c1_r);
+
+		let circleProperties = {"r":"1%", "cx":position.x, "cy":position.y, "strokeWidth":10, "stroke":"#s30", "id":"c2"};
+
+		createCircle(circleProperties);
+
+		let lineProperties1 = {"x1":c1_cx , "y1":c1_cy, "x2":position.x, "y2":position.y, "strokeWidth":1, "stroke":"#d30", "id":"l1"};
+	 	addLine(lineProperties1);
+
+	 	var angulo = document.getElementById("angulo");
+	 	angulo.setAttributeNS(null, "x", c1_cx);
+	 	angulo.setAttributeNS(null, "y", c1_cy);
+	 	angulo.textContent = (180/pi)*angle;
+ 	}
+
+ 	function addLine(lineProperties){
+
+ 		var l1 = document.getElementById(lineProperties.id);
+		if (l1 != undefined)
+			l1.remove();
+
+ 		let L = document.createElementNS(xmlns, "line");
+ 		L.setAttributeNS(null, "x1", lineProperties.x1);
+ 		L.setAttributeNS(null, "x2", lineProperties.x2);
+ 		L.setAttributeNS(null, "y1", lineProperties.y1);
+ 		L.setAttributeNS(null, "y2", lineProperties.y2);
+ 		L.setAttributeNS(null, "stroke-width", lineProperties.strokeWidth);
+ 		L.setAttributeNS(null, "stroke", lineProperties.stroke);
+ 		L.setAttributeNS(null, "id", lineProperties.id);
+ 		document.getElementById("test").appendChild(L);
+ 	}
+
+	
+	var c1 = document.getElementById("c1");
+	var c1_cx = c1.getAttributeNS(null, "cx");
+	var c1_cy = c1.getAttributeNS(null, "cy");
+	var c1_r = c1.getAttributeNS(null, "r") ;
+
+	let P = document.createElementNS(xmlns, "path");
+ 	P.setAttributeNS(null, "d", "M "+ (c1_cx) + " " + (c1_cy-c1_r) +" L "+ c1_cx +" " + ((c1_cy-c1_r) + (2*c1_r)) + " ");
+ 	P.setAttributeNS(null, "stroke-width", 2);
+ 	P.setAttributeNS(null, "stroke", "black");
+ 	P.setAttributeNS(null, "id", "ddd");
+ 	document.getElementById("test").appendChild(P);
+
+	setInterval("addcircle()", 2000);
+	
+
+	
+
+ 	// let createCircle => (){
+ 	// 	var C = document.createElementNS(xmlns, "circle");
+ 	// 	C.setAttributeNS(null, "r", "3%");
+ 	// 	C.setAttributeNS(null, "cx", evt.clientX);
+ 	// 	C.setAttributeNS(null, "cy", evt.clientY);
+ 	// 	C.setAttributeNS(null, "opacity", .5);
+ 	// 	C.setAttributeNS(null, "fill", "red");
+ 	// 	document.documentElement.appendChild(C);
+ 	// }
+
+	window.onload = function(){
+
+		var myAudio = document.getElementById('my-audio');
+		var play = document.getElementById('play');
+		var pause = document.getElementById('pause');
+		var loading = document.getElementById('loading');
+		var bar = document.getElementById('bar');
+
+		function displayControls() {
+			loading.style.display = "none";
+			play.style.display = "block";
+		}
+
+		// check that the media is ready before displaying the controls
+		if (myAudio.paused) {
+			displayControls();
+		} else {
+			// not ready yet - wait for canplay event
+			myAudio.addEventListener('canplay', function() {
+				displayControls();
+			});
+		}
+
+		play.addEventListener('click', function() {
+			myAudio.play();
+			play.style.display = "none";
+			pause.style.display = "block";
+		});
+
+		pause.addEventListener('click', function() {
+			myAudio.pause();
+			pause.style.display = "none";
+			play.style.display = "block";
+		});
+
+		// display progress
+
+		myAudio.addEventListener('timeupdate', function() {
+			//sets the percentage
+			bar.style.width = parseInt(((myAudio.currentTime / myAudio.duration) * 100), 10) + "%";
+		});
+
+		var progress = document.getElementById('progress');
+
+		progress.addEventListener('click', function(e) {
+
+			 // calculate the normalized position clicked
+			 var clickPosition = (e.pageX  - this.offsetLeft) / this.offsetWidth;
+			 var clickTime = clickPosition * myAudio.duration;
+
+			 // move the playhead to the correct position
+			 myAudio.currentTime = clickTime;
+		});
+
+	}
+</script>
+</body>
+</html>

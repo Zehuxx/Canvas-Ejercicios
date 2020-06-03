@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Test SVG</title>
+	<style>
+	</style>
+
+</head>
+<body>
+
+<svg viewbox= "0 0 600 400" >
+<script><![CDATA[
+ function add (evt) {
+ var C = evt.target;
+ var N = C.cloneNode(false);
+ N.setAttributeNS(null, "x", Math.random() * 300);
+ N.setAttributeNS(null, "y", Math.random() * 200);
+ C.parentNode.appendChild(N);
+ }
+]]></script>
+<text font-size="17" font-family="arial" y="40" x="20" fill="black">
+Click any blue shape</text>
+<rect x="55" y="50" height="50" width="85" stroke="#503" onmousedown="add(evt)"
+stroke-width="3" fill="blue" fill-opacity=".5" rx="20" stroke-dasharray="9,5,2,5"/>
+</svg>
+</body>
+</html>
