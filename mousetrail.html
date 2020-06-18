@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>svg circle animated</title>
+</head>
+<body>
+	<input type="text" id="seconds" value="60">
+	<svg id="test" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 400 400">
+		<defs>
+		    <pattern id="textura5" width="15" height="15"
+		        patternUnits="userSpaceOnUse">
+		        <rect width='50' height='50' fill='#282818'/>
+		        <circle cx='3' cy='4.3' r='1.8' fill='#373939'/>
+		        <circle cx='3' cy='3' r='1.8' fill='black'/>
+		        <circle cx='10.5' cy='12.5' r='1.8' fill='#291939'/>
+		        <circle cx='10.5' cy='11.3' r='1.8' fill='black'/>
+		    </pattern>
+	  	</defs>
+		<circle id="c1" r="50" cx="200" cy="200" fill="url(#textura5)" stroke="black">
+	</svg>
+	<script>
+	var xmlns = "http://www.w3.org/2000/svg";
+
+	function createCircle(circleProperties){
+		let C = document.createElementNS(xmlns, "circle");
+ 		C.setAttributeNS(null, "r", circleProperties.r);
+ 		C.setAttributeNS(null, "cx", circleProperties.cx);
+ 		C.setAttributeNS(null, "cy", circleProperties.cy);
+ 		C.setAttributeNS(null, "stroke-width", circleProperties.strokeWidth);
+ 		C.setAttributeNS(null, "stroke", circleProperties.stroke);
+ 		C.setAttributeNS(null, "fill", circleProperties.fill);
+ 		C.setAttributeNS(null, "id", circleProperties.id);
+ 		document.getElementById("test").appendChild(C);
+	}
+
+	var c1 = document.getElementById('c1'); 
+	var c1_r = parseInt(c1.getAttributeNS(null, "r"));
+	var c1_cx = parseInt(c1.getAttributeNS(null, "cx"));
+	var c1_cy = parseInt(c1.getAttributeNS(null, "cy"));
+	
+
+	let angle = 0;
+	var circleProperties = {"r":"10", "cx": c1_cx + c1_r * Math.cos(angle), "cy": c1_cy + c1_r * Math.sin(angle), "strokeWidth":1, "fill":"none", "stroke":"#e60", "id":"c2"};
+	createCircle(circleProperties);
+	var element =  document.getElementById("c2");
+	let start;
+	function step(timestamp) {
+	  	if (start === undefined){
+	    	start = timestamp;
+		}
+
+	  	const elapsed = timestamp - start;
+	  	angle += (2*Math.PI)/3600;
+		c2.setAttributeNS(null, "cx", c1_cx + c1_r * Math.cos(angle));
+		c2.setAttributeNS(null, "cy", c1_cy + c1_r * Math.sin(angle));
+		let seconds = document.getElementById("seconds");
+		seconds.value = seconds.value- (elapsed/60); 
+	  	if (elapsed < 60000) { // Stop the animation after 2 seconds
+	  	  window.requestAnimationFrame(step);
+	  	}
+	}
+	
+	//window.requestAnimationFrame(step);
+	function addLine(lineProperties){
+
+ 		var l1 = document.getElementById(lineProperties.id);
+		if (l1 != undefined)
+			l1.remove();
+
+ 		let L = document.createElementNS(xmlns, "line");
+ 		L.setAttributeNS(null, "x1", lineProperties.x1);
+ 		L.setAttributeNS(null, "x2", lineProperties.x2);
+ 		L.setAttributeNS(null, "y1", lineProperties.y1);
+ 		L.setAttributeNS(null, "y2", lineProperties.y2);
+ 		L.setAttributeNS(null, "stroke-width", lineProperties.strokeWidth);
+ 		L.setAttributeNS(null, "stroke", lineProperties.stroke);
+ 		L.setAttributeNS(null, "id", lineProperties.id);
+ 		document.getElementById("test").appendChild(L);
+ 	}
+
+	let lineProperties = {"x1":c1_cx , "y1":c1_cy, "x2":0, "y2":0, "strokeWidth":3, "stroke":"#d30", "id":"l1"};
+
+	var angle2 = -Math.PI/2;
+	for (var i = 0; i < 3; i++) {
+		
+		lineProperties.x2 = c1_cx + (c1_r * Math.cos(angle2));
+		lineProperties.y2 = c1_cy + (c1_r * Math.sin(angle2));
+		lineProperties.stroke = '#'+Math.floor(Math.random()*16777215).toString(16);
+		lineProperties.id =  i;
+		
+		addLine(lineProperties);
+		angle2 += 2*Math.PI/3;
+		console.log(lineProperties);
+	}
+
+</script>
+</body>
+</html>

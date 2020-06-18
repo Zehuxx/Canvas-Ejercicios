@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Reproductor</title>
+<style type="text/css">
+	#controls {
+		width: 80px;
+		float: left;
+	}
+
+	#bar {
+		height: 20px;
+		background-color: green;
+		width: 0;
+	}
+
+	#progress {
+   		margin-left: 80px;
+   		border: 1px solid black;
+   		cursor: pointer;
+	}
+</style>
+</head>
+<body>
+	<input type="text"  id="valores"></input>
+	<svg xmlns="http://www.w3.org/2000/svg" id="svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+ 	version="1.1"
+ 	width="800" height="600">
+
+ 	<g id="test">
+ 	</g>
+
+ 	
+
+	</svg>
+
+	<script type="text/javascript">
+
+	var xmlns = "http://www.w3.org/2000/svg";
+	var angle = Math.PI/2; //90°
+	var pi = Math.PI;
+
+
+	function createCircle(circleProperties){
+		let C = document.createElementNS(xmlns, "circle");
+ 		C.setAttributeNS(null, "r", circleProperties.r);
+ 		C.setAttributeNS(null, "cx", circleProperties.cx);
+ 		C.setAttributeNS(null, "cy", circleProperties.cy);
+ 		C.setAttributeNS(null, "stroke-width", circleProperties.strokeWidth);
+ 		C.setAttributeNS(null, "stroke", circleProperties.stroke);
+ 		C.setAttributeNS(null, "fill", circleProperties.fill);
+ 		C.setAttributeNS(null, "id", circleProperties.id);
+ 		document.getElementById("test").appendChild(C);
+	}
+	
+	function addcircle(circleProperties) {
+		
+		let cId = document.getElementById(circleProperties.id);
+		if (cId != undefined)
+			cId.remove();
+
+		createCircle(circleProperties);
+ 	}
+
+ 	function addLine(lineProperties){
+
+ 		var l1 = document.getElementById(lineProperties.id);
+		if (l1 != undefined)
+			l1.remove();
+
+ 		let L = document.createElementNS(xmlns, "line");
+ 		L.setAttributeNS(null, "x1", lineProperties.x1);
+ 		L.setAttributeNS(null, "x2", lineProperties.x2);
+ 		L.setAttributeNS(null, "y1", lineProperties.y1);
+ 		L.setAttributeNS(null, "y2", lineProperties.y2);
+ 		L.setAttributeNS(null, "stroke-width", lineProperties.strokeWidth);
+ 		L.setAttributeNS(null, "stroke", lineProperties.stroke);
+ 		L.setAttributeNS(null, "id", lineProperties.id);
+ 		document.getElementById("test").appendChild(L);
+ 	}
+
+ 	function move(evt){
+ 		console.log(evt.clientX, evt.clientY);
+ 		pointInsideCircle(evt.clientX, evt.clientY, "c1");
+ 		//CirclePoint(evt.clientX, evt.clientY, evt.target.r.animVal.value, 10);
+ 	}
+
+ 	function CirclePoint(x0, y0, r, angle) {
+		let lineFinalPoints = {x0: x0 + r * Math.cos(angle), y0: y0 + r * Math.sin(angle)};
+
+		let lineProperties = {"x1":x0 , "y1":y0, "x2":lineFinalPoints.x0, "y2":lineFinalPoints.y0, "strokeWidth":3, "stroke":"#d30", "id":"l1"};
+
+		addLine(lineProperties);
+	}
+
+	function pointInsideCircle(x,y,circleId){
+		let inside = false;
+		let c = document.getElementById(circleId);
+		let c_position = {x:c.cx.animVal.value, y:c.cy.animVal.value};
+		let c_r = c.r.animVal.value;
+		let x_max = c_position.x + c_r;
+		let x_min = c_position.x - c_r;
+		let y_max = c_position.y + c_r;
+		let y_min = c_position.y - c_r;
+
+		console.log(x_max,x_min,y_max,y_min);
+		if ( (x >= x_min && x <= x_max) && (y >= y_min && y <= y_max) ) {
+			inside = true;
+		}
+
+		console.log(inside);
+		return inside;
+	}
+
+	
+	// var c1 = document.getElementById("c1");
+	// var c1_cx = c1.getAttributeNS(null, "cx");
+	// var c1_cy = c1.getAttributeNS(null, "cy");
+	// var c1_r = c1.getAttributeNS(null, "r") ;
+
+	// let P = document.createElementNS(xmlns, "path");
+ // 	P.setAttributeNS(null, "d", "M "+ c1_cx + " " + (c1_cy-c1_r) +" L "+ c1_cx +" " + ((c1_cy-c1_r) + (2*c1_r)) + " ");
+ // 	P.setAttributeNS(null, "stroke-width", 2);
+ // 	P.setAttributeNS(null, "stroke", "black");
+ // 	P.setAttributeNS(null, "id", "ddd");
+ // 	document.getElementById("test").appendChild(P);
+
+	//setInterval("addcircle()", 2000);
+	
+	
+	var circleProperties = {"r":"25%", "cx":"50%", "cy":"50%", "strokeWidth":1, "fill":"none", "stroke":"#e60", "id":"c1"};
+	addcircle(circleProperties);
+	var c1 = document.getElementById("c1");
+	var c1_BB = c1.getBBox();
+	CirclePoint(c1.cx.animVal.value, c1.cy.animVal.value, c1.r.animVal.value, pi);
+
+	var zz= document.getElementById("svg");
+
+	zz.addEventListener("click", function(e){
+		move(e);
+	});
+
+ 	// let createCircle => (){
+ 	// 	var C = document.createElementNS(xmlns, "circle");
+ 	// 	C.setAttributeNS(null, "r", "3%");
+ 	// 	C.setAttributeNS(null, "cx", evt.clientX);
+ 	// 	C.setAttributeNS(null, "cy", evt.clientY);
+ 	// 	C.setAttributeNS(null, "opacity", .5);
+ 	// 	C.setAttributeNS(null, "fill", "red");
+ 	// 	document.documentElement.appendChild(C);
+ 	// }
+
+</script>
+</body>
+</html>

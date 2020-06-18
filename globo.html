@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>globo</title>
+<style>
+span {
+margin-left: 50%; 
+}
+</style>
+</head>
+<body>
+
+<span id="baloon" style="font-size: 10px;">🎈</span>
+<span id="explosion" style="display: none; font-size: 10px;">💥</span>
+<div style="height: 600px"></div>
+<script>
+	let baloon = document.getElementById("baloon");
+	let explosion = document.getElementById("explosion");
+
+	let keyDownHandler = event => {
+		event.preventDefault();
+		if (event.key == "ArrowUp") {
+			let tam = parseInt(baloon.style.fontSize.slice(0, baloon.style.fontSize.length-2)) + 10;
+			baloon.style.fontSize =  tam +"px";
+			if (tam>300) {explosionAnimate();}
+
+		}
+	}
+
+	window.addEventListener("keydown", keyDownHandler);
+
+	window.addEventListener("keyup", event => {
+		event.preventDefault();
+		if (event.key == "ArrowDown") {
+				let tam = parseInt(baloon.style.fontSize.slice(0, baloon.style.fontSize.length-2)) - 10 ;
+				baloon.style.fontSize =  tam +"px";
+			}
+	});
+
+	function explosionAnimate(){
+		var baloonFontSize = baloon.style.fontSize;
+		var baloonFontSizeValue = baloonFontSize.slice(0, baloonFontSize.length-2);
+		baloon.style.display = "none";
+		explosion.style.display = "block";
+
+	let clock = setInterval(() => {
+					let tam = parseInt(explosion.style.fontSize.slice(0, explosion.style.fontSize.length-2)) + 10;
+					explosion.style.fontSize =  tam +"px";
+					if (tam >= baloonFontSizeValue) {
+						clearInterval(clock);
+					}
+				}, 25);
+		
+	}
+
+</script>
+</body>
+</html>

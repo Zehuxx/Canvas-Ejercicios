@@ -53,6 +53,14 @@
 
 	<script type="text/javascript">
 
+	let rabbit = {};
+rabbit.speak = function(line) {
+console.log(`The rabbit says '${line}'`);
+};
+rabbit.speak("I'm alive.");
+// → The rabbit says 'I'm alive.'
+
+
 	var xmlns = "http://www.w3.org/2000/svg";
 	var angle = Math.PI/2; //90°°°°
 	var pi = Math.PI;
@@ -74,10 +82,10 @@
 		}else {
 			angle-=(pi/(Math.random()*10));
 		}
-		console.log(Math.random());
+		//console.log(Math.random());
 		//console.log((180/pi)*angle);
 
-		return {x: r * Math.cos(angle) + parseInt(c1_cx), y: r * Math.sin(angle) + parseInt(c1_cy)};
+		return {x: r * Math.cos(pi/2) + parseInt(c1_cx), y: r * Math.sin(pi/2) + parseInt(c1_cy)};
 	}
 
 	function addcircle() {
@@ -98,7 +106,7 @@
 	 	var angulo = document.getElementById("angulo");
 	 	angulo.setAttributeNS(null, "x", c1_cx);
 	 	angulo.setAttributeNS(null, "y", c1_cy);
-	 	angulo.textContent = (180/pi)*angle;
+	 	angulo.textContent = (180/pi)*(pi/2);
  	}
 
  	function addLine(lineProperties){
@@ -125,14 +133,14 @@
 	var c1_r = c1.getAttributeNS(null, "r") ;
 
 	let P = document.createElementNS(xmlns, "path");
- 	P.setAttributeNS(null, "d", "M "+ (c1_cx) + " " + (c1_cy-c1_r) +" L "+ c1_cx +" " + ((c1_cy-c1_r) + (2*c1_r)) + " ");
+ 	P.setAttributeNS(null, "d", "M "+ c1_cx + " " + (c1_cy-c1_r) +" L "+ c1_cx +" " + ((c1_cy-c1_r) + (2*c1_r)) + " ");
  	P.setAttributeNS(null, "stroke-width", 2);
  	P.setAttributeNS(null, "stroke", "black");
  	P.setAttributeNS(null, "id", "ddd");
  	document.getElementById("test").appendChild(P);
 
-	setInterval("addcircle()", 2000);
-	
+	//setInterval("addcircle()", 2000);
+	addcircle();
 
 	
 
