@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>drag and drop</title>
+	<style type="text/css">
+	#filesDragZone{
+	 float: left;
+	 width: 500px;
+	 height: 300px;
+	 margin: 10px;
+	 border: 1px solid #999999;
+	}
+
+	#btnLoadFiles{
+		display: none;
+	}
+
+	</style>
+</head>
+<body>
+
+<div id="filesDragZone">
+	<input type="file" id="btnLoadFiles" multiple >
+</div>
+
+<div>
+	<table id="tableFiles">
+		<tr>
+			<td>#</td>
+			<td>nombre</td>
+			<td>peso</td>
+			<td>tipo</td>
+		</tr>
+		<tbody id="tableTBodyFiles">
+			
+		</tbody>
+	</table>
+</div>
+
+<script>
+
+function iterateFiles(filesArray)
+{
+    for(var i=0; i<filesArray.length; i++){
+        for(var j=0; j<filesArray[i].length; j++){
+			selectedFiles.push(filesArray[i][j]);
+        }
+	}
+	
+}
+
+function listarFiles(){
+	let tBody = document.getElementById("tableTBodyFiles");
+	
+	if(selectedFiles.length > 0){
+		tBody.innerHTML = ''; // limpia la tabla
+		for (let i = 0; i < selectedFiles.length; i++) {
+			tBody.innerHTML += '<td>'+(i + 1)+'</td>' + '<td>'+selectedFiles[i].name+'</td>' + '<td>'+selectedFiles[i].size+'</td>' + '<td>'+selectedFiles[i].type+'</td>';
+		}
+	}
+}
+
+var selectedFiles = [];
+function inicializar(){
+	let filesDragZone = document.getElementById('filesDragZone');
+	let btnLoadFiles = document.getElementById('btnLoadFiles');
+	filesDragZone.addEventListener('click', function(e){ btnLoadFilesClickEvent(); }, false);
+	btnLoadFiles.addEventListener('change', function(){ btnLoadFilesChangeEvent(this); }, false);
+	//soltar.addEventListener('dragenter', function(e){
+	//e.preventDefault(); }, false);
+	//soltar.addEventListener('dragover', function(e){
+	//e.preventDefault(); }, false);
+	//soltar.addEventListener('drop', soltado, false);
+}
+
+function btnLoadFilesClickEvent(){
+	let btnLoadFiles = document.getElementById('btnLoadFiles');
+	btnLoadFiles.click();
+	//soltar.addEventListener('dragenter', function(e){
+	//e.preventDefault(); }, false);
+	//soltar.addEventListener('dragover', function(e){
+	//e.preventDefault(); }, false);
+	//soltar.addEventListener('drop', soltado, false);
+}
+
+function btnLoadFilesChangeEvent(e){
+	let files = [];
+	files.push(e.files);
+	iterateFiles(files);
+	console.log(selectedFiles);
+	listarFiles();
+}
+
+function soltado(e){
+	e.preventDefault();
+	var archivos=e.dataTransfer.files;
+	selectedFiles = e.dataTransfer.files;
+	var lista='';
+	for(var f=0;f<archivos.length;f++){
+		lista+='Archivo: '+archivos[f].name+' '+archivos[f].size+'<br>';
+		console.log(archivos[f]);
+	}
+	soltar.innerHTML=lista;
+}
+window.addEventListener('load', inicializar, false);
+</script>
+</body>
+</html>

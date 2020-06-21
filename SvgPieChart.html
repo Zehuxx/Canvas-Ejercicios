@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>svg pie chart</title>
+</head>
+<body>
+	<svg id="test" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" viewBox="0 0 100 100">
+
+		
+	</svg>
+	<script>
+
+	var radToDegree = (rad) => {return (180/Math.PI)*rad;}
+	var degreeToRad = (deg) => {return (Math.PI/180)*deg;}
+
+	
+ 	
+	function createSlice(slicesProperties){
+
+	}
+	// r*cos(o); x
+	// r*sin(o); y
+	var xmlns = "http://www.w3.org/2000/svg";
+
+	function chartOptions(chartProperties){
+		if (chartProperties.type=='pie') {
+			pieChartCreate(chartProperties.container,chartProperties.pieChartData);
+		}
+		else{
+			console.log('chart type error.');
+		}
+	}
+
+	function pieChartCreate(container,pieChartData){
+		
+		container = document.getElementById(container);
+		
+		let pieChartTotal = sum(pieChartData.slices);
+		let pieChartSlices = pieChartData.slices.length;
+		let currentTotal = 0;
+		let cx = container.viewBox.animVal.width/2;
+		let cy = container.viewBox.animVal.height/2;
+		let r = ((cx/cy)<1) ? (cx*0.8):(cy*0.8);
+		let angle = 0;
+		
+		for (var i = 0; i < pieChartSlices; i++) {
+			let data = pieChartData.slices[i];
+			let center = (((data.value/pieChartTotal)*360)/2) + currentTotal;
+			currentTotal += (data.value/pieChartTotal)*360;
+			
+			let pathProperties = {
+				d:"M"+cx+","+cy,
+				strokeWidth:1, 
+				stroke:'#'+Math.floor(Math.random()*16777215).toString(16),
+				fill:'#'+Math.floor(Math.random()*16777215).toString(16),
+				center: center,
+			}
+			
+			while(angle <= currentTotal){
+				let x = cx + r*Math.cos(degreeToRad(angle));
+				let y = cy + r*Math.sin(degreeToRad(angle));
+				let xy = " " + x+","+y;
+				pathProperties.d+=xy;
+				
+				angle+=0.11;
+			}
+
+			console.log(angle);
+			pathProperties.d+=" Z";
+			addPath(pathProperties);
+			
+			console.log(data.value + " => " +(data.value/pieChartTotal)*100 +"%");
+
+		}
+
+		var paths = document.getElementsByClassName("scale");
+		console.log(paths);
+		for (let path of paths) {
+			path.addEventListener("mouseenter", (e) => {
+				let x = Math.cos(e.target.getAttributeNS(null, "center"));
+				let y = Math.sin(e.target.getAttributeNS(null, "center"));
+				e.target.setAttributeNS(null, "transform", "translate("+x+","+y+")");
+			});
+			path.addEventListener("mouseout", e => {
+				console.log("Up.");
+				e.target.setAttributeNS(null, "transform","scale(1,1)");
+				if (event.button == 2) e.stopPropagation();
+			});
+		}
+		
+		
+	}
+
+	function sum(data){
+		let total = 0;
+		for (var i = 0; i < data.length; i++) {
+			total += data[i].value;
+		}
+		return total;
+	}
+
+	var chartProperties = {
+		container:"test",
+		type:"pie",
+		pieChartData:{
+			slices:[{label: "xxx",value:23,color:"#7AA20D"},{label: "xxx",value:12,color:"#5fg"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:7,color:"#3f423g"},{label: "xxx",value:40,color:"#3f423g"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:0.2,color:"#3f423g"}],
+		},
+	} 
+
+
+	chartOptions(chartProperties);
+
+	function addPath(pathProperties){
+
+ 		let P = document.createElementNS(xmlns, "path");
+ 		P.setAttributeNS(null, "d", pathProperties.d);
+ 		P.setAttributeNS(null, "stroke-width", pathProperties.strokeWidth);
+ 		//P.setAttributeNS(null, "stroke", pathProperties.stroke);
+ 		P.setAttributeNS(null, "fill", pathProperties.fill);
+ 		P.setAttributeNS(null, "center", pathProperties.center);
+ 		P.setAttributeNS(null, "class", "scale");
+ 		document.getElementById("test").appendChild(P);
+ 	}
+
+ 	
+
+</script>
+</body>
+</html>
