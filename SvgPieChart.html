@@ -2,11 +2,32 @@
 <html>
 <head>
 	<title>svg pie chart</title>
+	<style type="text/css">
+
+		svg {
+			width: 500px;
+  			border-radius: 50%;
+  			transform: rotate(-90deg);
+  			margin: 0 auto;
+  			display: block;
+  			/*border: 4px dashed;*/
+		}
+		.circles circle {
+		    transform-origin: center;
+		}
+		/*circle {
+		  fill: yellowgreen;
+		  stroke: #655;
+		  stroke-width: 40;
+		  stroke-dasharray: 60 126; /* 2π × 25 ≈ 158 */
+		  /*transform: rotate(-90deg);*/
+		}*/
+	</style>
 </head>
 <body>
-	<svg id="test" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="200" viewBox="0 0 100 100">
-
-		
+	<svg viewBox="0 0 40 40" id="test" > 
+		<g class="circles" id="circles">
+    	</g>
 	</svg>
 	<script>
 
@@ -15,7 +36,7 @@
 
 	
  	
-	function createSlice(slicesProperties){
+	function createSlice(slicesProperties){ 
 
 	}
 	// r*cos(o); x
@@ -37,57 +58,44 @@
 		
 		let pieChartTotal = sum(pieChartData.slices);
 		let pieChartSlices = pieChartData.slices.length;
-		let currentTotal = 0;
+		let currentPercentage = 0;
 		let cx = container.viewBox.animVal.width/2;
 		let cy = container.viewBox.animVal.height/2;
-		let r = ((cx/cy)<1) ? (cx*0.8):(cy*0.8);
-		let angle = 0;
-		
+		let xxx =0;
 		for (var i = 0; i < pieChartSlices; i++) {
 			let data = pieChartData.slices[i];
-			let center = (((data.value/pieChartTotal)*360)/2) + currentTotal;
-			currentTotal += (data.value/pieChartTotal)*360;
+			let cid = "c"+i;
 			
-			let pathProperties = {
-				d:"M"+cx+","+cy,
-				strokeWidth:1, 
+			console.log(currentPercentage);
+			let circleProperties = {
+				cx:cx,
+				cy:cy,
+				r:cx,
+				strokeWidth:40,
+				transform: "rotate("+currentPercentage+")",
 				stroke:'#'+Math.floor(Math.random()*16777215).toString(16),
-				fill:'#'+Math.floor(Math.random()*16777215).toString(16),
-				center: center,
+				fill:'none',//(data.value/pieChartTotal)*Math.PI*2*cx+" "+ Math.PI*2*cx
+				strokeDashArray: 0+" "+ Math.PI*2*cx,
+				id: cid,
 			}
+			currentPercentage += (data.value/pieChartTotal)*360;
+			createCircle(circleProperties);
 			
-			while(angle <= currentTotal){
-				let x = cx + r*Math.cos(degreeToRad(angle));
-				let y = cy + r*Math.sin(degreeToRad(angle));
-				let xy = " " + x+","+y;
-				pathProperties.d+=xy;
-				
-				angle+=0.11;
-			}
+			document.getElementById(cid).animate([
+			  // keyframes
+			  {  "strokeDasharray": 0 +"," +Math.PI*2*cx }, 
+			  {  "strokeDasharray": (data.value/pieChartTotal)*Math.PI*2*cx +"," +Math.PI*2*cx }
+			], { 
+			  // timing options
+			  duration: 1000,
+			  easing: "linear",
+			  fill: "forwards",
+			});
 
-			console.log(angle);
-			pathProperties.d+=" Z";
-			addPath(pathProperties);
-			
-			console.log(data.value + " => " +(data.value/pieChartTotal)*100 +"%");
-
+			xxx = (data.value/pieChartTotal)*Math.PI*2*cx;
+			setTimeout(() => { console.log("World!"); }, 2000);
 		}
 
-		var paths = document.getElementsByClassName("scale");
-		console.log(paths);
-		for (let path of paths) {
-			path.addEventListener("mouseenter", (e) => {
-				let x = Math.cos(e.target.getAttributeNS(null, "center"));
-				let y = Math.sin(e.target.getAttributeNS(null, "center"));
-				e.target.setAttributeNS(null, "transform", "translate("+x+","+y+")");
-			});
-			path.addEventListener("mouseout", e => {
-				console.log("Up.");
-				e.target.setAttributeNS(null, "transform","scale(1,1)");
-				if (event.button == 2) e.stopPropagation();
-			});
-		}
-		
 		
 	}
 
@@ -103,7 +111,7 @@
 		container:"test",
 		type:"pie",
 		pieChartData:{
-			slices:[{label: "xxx",value:23,color:"#7AA20D"},{label: "xxx",value:12,color:"#5fg"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:7,color:"#3f423g"},{label: "xxx",value:40,color:"#3f423g"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:4,color:"#3f423g"},{label: "xxx",value:0.2,color:"#3f423g"}],
+			slices:[{label: "xxx",value:1,color:"#7AA20D"},{label: "xxx",value:11,color:"#5fg"},{label: "xxx",value:1,color:"#3f423g"},{label: "xxx",value:3,color:"#7AA20D"}],
 		},
 	} 
 
@@ -115,14 +123,25 @@
  		let P = document.createElementNS(xmlns, "path");
  		P.setAttributeNS(null, "d", pathProperties.d);
  		P.setAttributeNS(null, "stroke-width", pathProperties.strokeWidth);
- 		//P.setAttributeNS(null, "stroke", pathProperties.stroke);
  		P.setAttributeNS(null, "fill", pathProperties.fill);
  		P.setAttributeNS(null, "center", pathProperties.center);
  		P.setAttributeNS(null, "class", "scale");
  		document.getElementById("test").appendChild(P);
  	}
 
- 	
+ 	function createCircle(circleProperties){
+		let C = document.createElementNS(xmlns, "circle");
+ 		C.setAttributeNS(null, "r", circleProperties.r);
+ 		C.setAttributeNS(null, "cx", circleProperties.cx);
+ 		C.setAttributeNS(null, "cy", circleProperties.cy);
+ 		C.setAttributeNS(null, "stroke-width", circleProperties.strokeWidth);
+ 		C.setAttributeNS(null, "stroke-dasharray", circleProperties.strokeDashArray);
+ 		C.setAttributeNS(null, "stroke", circleProperties.stroke);
+ 		C.setAttributeNS(null, "transform", circleProperties.transform);
+ 		C.setAttributeNS(null, "fill", circleProperties.fill);
+ 		C.setAttributeNS(null, "id", circleProperties.id);
+ 		document.getElementById("circles").appendChild(C);
+	}
 
 </script>
 </body>
